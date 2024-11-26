@@ -3,7 +3,6 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
-import { deepOrange } from "@mui/material/colors";
 //type
 interface IButtonProps {
   type: "submit" | "button" | "reset";
@@ -18,7 +17,14 @@ const ButtonInput = ({ variant, type, text, pending }: IButtonProps) => {
         <Button
           type={type}
           variant={variant}
-          sx={{ marginBottom: 1, width: "100%" }}
+          sx={{
+            marginBottom: 1,
+            width: "100%",
+            borderRadius: "20px",
+            padding: "8px",
+            boxShadow: "0px 18px 30px 0px #2F1C1C1A",
+            minHeight: "56px",
+          }}
           disabled={pending}
         >
           {text}
@@ -26,8 +32,8 @@ const ButtonInput = ({ variant, type, text, pending }: IButtonProps) => {
         {pending && (
           <CircularProgress
             size={24}
+            color="primary"
             sx={{
-              color: deepOrange[500],
               position: "absolute",
               top: "50%",
               left: "50%",

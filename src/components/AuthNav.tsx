@@ -7,7 +7,8 @@ import {
   MenuItem,
   SelectChangeEvent,
 } from "@mui/material";
-
+// Next.js
+import Link from "next/link";
 import { useState } from "react";
 const AuthNav = () => {
   const [language, setLanguage] = useState<"English" | "Arabic">("English");
@@ -30,17 +31,26 @@ const AuthNav = () => {
         paddingInlineEnd="60px"
       >
         <Button
+          component={Link}
+          href="/sign-up"
           variant="outlined"
           color="primary"
           sx={{
             border: "1px solid #E0E0E9",
             boxShadow: "0px 10px 30px 0px #4461F20D",
             borderRadius: "15px",
+            textTransform: "none",
           }}
         >
           Register
         </Button>
-        <Button variant="text" color="primary" sx={{ fontWeight: "700" }}>
+        <Button
+          component={Link}
+          href="/sign-in"
+          variant="text"
+          color="primary"
+          sx={{ fontWeight: "700", textTransform: "none" }}
+        >
           Sign in
         </Button>
         <Select

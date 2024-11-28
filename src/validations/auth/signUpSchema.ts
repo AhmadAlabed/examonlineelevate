@@ -5,10 +5,18 @@ const signUpSchema = z
   .object({
     firstName: z
       .string()
-      .min(3, "First Name must contain at least 3 characters."),
+      .min(3, "First Name must contain at least 3 characters.")
+      .regex(
+        /^[a-zA-Z]+$/,
+        "First Name must contain only alphabetic characters."
+      ),
     lastName: z
       .string()
-      .min(3, "Last Name must contain at least 3 characters."),
+      .min(3, "Last Name must contain at least 3 characters.")
+      .regex(
+        /^[a-zA-Z]+$/,
+        "Last Name must contain only alphabetic characters."
+      ),
     email: z.string().email("Invalid email address."),
     password: z
       .string()

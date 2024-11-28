@@ -1,11 +1,3 @@
-// import { z } from "zod";
-// export const SignInSchema = z.object({
-//   email: z.string().min(3, { message: "min 3" }).max(50, { message: "max 50" }),
-//   password: z
-//     .string()
-//     .min(3, { message: "min 3" })
-//     .max(50, { message: "max 50" }),
-// });
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 

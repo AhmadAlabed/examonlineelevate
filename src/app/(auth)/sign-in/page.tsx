@@ -18,6 +18,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { signInResolver } from "@/validations/auth/signInSchema";
 import { type TSigninDataType } from "@/types/common";
 import { signIn } from "next-auth/react";
+import { toast } from "react-toastify";
 const SignIn = () => {
   const router = useRouter();
   const {
@@ -41,10 +42,9 @@ const SignIn = () => {
       });
       if (res?.error) {
         console.error("Login error:", res.error);
-        alert(res.error);
+        toast.error(res.error);
       } else {
-        alert("Login successful");
-        // console.log("Login successful", res);
+        toast.success("Login successful");
         router.push("/");
       }
     } catch (error) {
@@ -65,6 +65,7 @@ const SignIn = () => {
           marginInline: "auto",
           gap: 4,
           mt: 4,
+          mb: 4,
         }}
       >
         <Typography component="h3" variant="h5" sx={{ fontWeight: "700" }}>
@@ -89,6 +90,7 @@ const SignIn = () => {
           />
           <PasswordInput
             variant="outlined"
+            placeholder="Password"
             name="password"
             register={register}
             error={errors.password}

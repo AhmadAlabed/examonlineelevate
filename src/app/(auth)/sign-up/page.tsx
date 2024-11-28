@@ -18,6 +18,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { signUpResolver } from "@/validations/auth/signUpSchema";
 import { type TSignUpDataType } from "@/types/common";
 import { signUpAction } from "@/actions/signUpAction";
+import { toast } from "react-toastify";
 
 const SignUp = () => {
   const router = useRouter();
@@ -43,9 +44,14 @@ const SignUp = () => {
       Object.entries(data).forEach(([key, value]) => {
         formData.append(key, value as string);
       });
-      console.log("Before Server Response");
       const result = await signUpAction(formData);
-      console.log("Server Response:", result);
+      // console.log(result);
+      if (result?.message !== "success") {
+        toast.error(result?.message);
+      } else {
+        toast.success("success");
+        router.push("/sign-in");
+      }
       //TODO
     } catch (error) {
       console.error(error);
@@ -65,6 +71,7 @@ const SignUp = () => {
           marginInline: "auto",
           gap: 4,
           mt: 4,
+          mb: 4,
         }}
       >
         <Typography component="h3" variant="h5" sx={{ fontWeight: "700" }}>
@@ -120,7 +127,7 @@ const SignUp = () => {
           <Stack direction="row" spacing={1} justifyContent="center">
             <Typography>Already have an account?</Typography>
 
-            <Link href="/">
+            <Link href="/sign-in">
               <Typography color="primary">Login</Typography>
             </Link>
           </Stack>

@@ -21,3 +21,9 @@ export type TSignUpDataType = {
   rePassword: string;
   phone?: string;
 };
+export type TForgetPasswordDataType = {
+  email: string;
+};
+export type TVerifyCodeDataType = {
+  otp: string;
+};

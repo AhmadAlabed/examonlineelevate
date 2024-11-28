@@ -6,6 +6,7 @@ import NextAuthProvider from "@/providers/NextAuthProvider";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import ToastProvider from "@/providers/ToastProvider";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -35,7 +36,9 @@ export default function RootLayout({
       >
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
-            <NextAuthProvider>{children}</NextAuthProvider>
+            <NextAuthProvider>
+              <ToastProvider>{children}</ToastProvider>
+            </NextAuthProvider>
           </ThemeProvider>
         </AppRouterCacheProvider>
       </body>

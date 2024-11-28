@@ -37,7 +37,7 @@ export default function layout({ children }: { children: React.ReactNode }) {
             <Image alt="" src="/bro.png" width="400" height="434" />
           </Box>
         </Grid2>
-        <Grid2 size={{ xs: 12, md: 6 }} sx={{ padding: "60px 60px 0 0" }}>
+        <Grid2 size={{ xs: 12, md: 6 }} sx={{ paddingTop: "60px" }}>
           {children}
         </Grid2>
       </Grid2>

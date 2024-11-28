@@ -1,14 +1,17 @@
 "use client";
+import { type TLoginDataType } from "@/types/common";
 //MUI
 import TextField from "@mui/material/TextField";
+// React Hook Form
+import { FieldError, UseFormRegister } from "react-hook-form";
 //type
 interface ITextInputProps {
   type: string;
   variant: "filled" | "outlined" | "standard";
   placeholder: string;
   name: string;
-  error: string;
-  defaultValue: string;
+  error?: FieldError;
+  register: UseFormRegister<TLoginDataType>;
 }
 
 const TextInput = ({
@@ -17,7 +20,7 @@ const TextInput = ({
   placeholder,
   name,
   error,
-  defaultValue,
+  register,
 }: ITextInputProps) => {
   return (
     <>
@@ -25,11 +28,10 @@ const TextInput = ({
         variant={variant}
         placeholder={placeholder}
         type={type}
-        name={name}
         fullWidth
-        defaultValue={defaultValue}
+        {...register(name)}
         error={!!error}
-        helperText={error}
+        helperText={error?.message}
         sx={{ marginBottom: 2 }}
         slotProps={{
           input: {

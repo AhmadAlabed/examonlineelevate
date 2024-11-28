@@ -1,17 +1,57 @@
+"use client";
 //Custom Component
 import ButtonInput from "@/components/ui/ButtonInput";
 import PasswordInput from "@/components/ui/PasswordInput";
 import TextInput from "@/components/ui/TextInput";
+import AuthNav from "@/components/AuthNav";
+import AuthButtons from "@/components/AuthButtons";
 //MUI
 import { Box, Divider, Typography } from "@mui/material";
 //Icon
 //
-//Next
+// Next.js
 import Link from "next/link";
-import AuthNav from "@/components/AuthNav";
-import AuthButtons from "@/components/AuthButtons";
-
+import { useRouter } from "next/navigation";
+// React Hook Form
+import { useForm, SubmitHandler } from "react-hook-form";
+// Validation Schema
+import { signInResolver } from "@/validations/auth/signInSchema";
+import { type TSigninDataType } from "@/types/common";
+import { signIn } from "next-auth/react";
 const SignIn = () => {
+  const router = useRouter();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+  } = useForm<TSigninDataType>({
+    defaultValues: {
+      email: "",
+      password: "",
+    },
+    resolver: signInResolver,
+  });
+  const onSubmit: SubmitHandler<TSigninDataType> = async (data) => {
+    console.log(data);
+    try {
+      const res = await signIn("credentials", {
+        redirect: false,
+        email: data.email,
+        password: data.password,
+      });
+      if (res?.error) {
+        console.error("Login error:", res.error);
+        alert(res.error);
+      } else {
+        alert("Login successful");
+        // console.log("Login successful", res);
+        router.push("/");
+      }
+    } catch (error) {
+      console.error(error);
+      //TODO
+    }
+  };
   return (
     <>
       <AuthNav />
@@ -32,7 +72,7 @@ const SignIn = () => {
         </Typography>
         <Box
           component="form"
-          // action={}
+          onSubmit={handleSubmit(onSubmit)}
           sx={{
             display: "flex",
             flexDirection: "column",
@@ -41,17 +81,17 @@ const SignIn = () => {
         >
           <TextInput
             name="email"
-            defaultValue=""
+            register={register}
             placeholder="Enter Email"
-            error=""
+            error={errors.email}
             type="text"
             variant="outlined"
           />
           <PasswordInput
             variant="outlined"
             name="password"
-            defaultValue=""
-            error=""
+            register={register}
+            error={errors.password}
           />
           <Link href="/">
             <Typography
@@ -66,10 +106,10 @@ const SignIn = () => {
           </Link>
 
           <ButtonInput
-            pending={false}
             type="submit"
             text="Sign in"
             variant="contained"
+            pending={isSubmitting}
           />
         </Box>
 

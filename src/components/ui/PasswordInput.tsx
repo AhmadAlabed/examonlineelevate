@@ -1,4 +1,5 @@
 "use client";
+import { type TLoginDataType } from "@/types/common";
 //MUI
 import { InputAdornment } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
@@ -7,18 +8,22 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import TextField from "@mui/material/TextField";
 //React
 import { MouseEvent, useState } from "react";
+// React Hook Form
+import { FieldError, UseFormRegister } from "react-hook-form";
 //type
 interface IPasswordInputProps {
   variant: "filled" | "outlined" | "standard";
   name: string;
-  error: string;
-  defaultValue: string;
+  error?: FieldError;
+  register: UseFormRegister<TLoginDataType>;
+  placeholder: string;
 }
 const PasswordInput = ({
   variant,
   name,
   error,
-  defaultValue,
+  register,
+  placeholder,
 }: IPasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -30,12 +35,11 @@ const PasswordInput = ({
       <TextField
         variant={variant}
         type={showPassword ? "text" : "password"}
-        name={name}
         fullWidth
-        placeholder="Password"
-        defaultValue={defaultValue}
+        placeholder={placeholder}
+        {...register(name)}
+        helperText={error?.message}
         error={!!error}
-        helperText={error}
         sx={{ marginBottom: 2 }}
         slotProps={{
           input: {

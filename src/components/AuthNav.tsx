@@ -23,7 +23,12 @@ const AuthNav = () => {
   };
   return (
     <>
-      <Stack component="nav" direction="row-reverse" spacing={3}>
+      <Stack
+        component="nav"
+        direction="row-reverse"
+        spacing={3}
+        paddingInlineEnd="60px"
+      >
         <Button
           variant="outlined"
           color="primary"

@@ -1,7 +1,6 @@
 "use client";
 //Custom Component
 import ButtonInput from "@/components/ui/ButtonInput";
-import PasswordInput from "@/components/ui/PasswordInput";
 import TextInput from "@/components/ui/TextInput";
 import AuthNav from "@/components/AuthNav";
 import AuthButtons from "@/components/AuthButtons";
@@ -15,47 +14,43 @@ import { useRouter } from "next/navigation";
 // React Hook Form
 import { useForm, SubmitHandler } from "react-hook-form";
 // Validation Schema
-import { signUpResolver } from "@/validations/auth/signUpSchema";
-import { type TSignUpDataType } from "@/types/common";
-import { signUpAction } from "@/actions/signUpAction";
+import { verifyCodeResolver } from "@/validations/auth/verifyCodeSchema";
+import { type TVerifyCodeDataType } from "@/types/common";
 import { toast } from "react-toastify";
-
-const SignUp = () => {
+import { verifyCodeAction } from "@/actions/verifyCodeAction";
+const VerifyCode = () => {
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<TSignUpDataType>({
+  } = useForm<TVerifyCodeDataType>({
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
-      password: "",
-      rePassword: "",
-      phone: "",
+      otp: "",
     },
-    resolver: signUpResolver,
+    resolver: verifyCodeResolver,
   });
-  const onSubmit: SubmitHandler<TSignUpDataType> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<TVerifyCodeDataType> = async (data) => {
+    // console.log(data);
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         formData.append(key, value as string);
       });
-      const result = await signUpAction(formData);
-      // console.log(result);
-      if (result?.message !== "success") {
+      const result = await verifyCodeAction(formData);
+      // // console.log(result);
+      if (result?.status !== "Success") {
         toast.error(result?.message);
       } else {
-        toast.success("success");
-        router.push("/sign-in");
+        toast.success(
+          "Your password was reset successfully, please set a new password."
+        );
+        router.push("/auth/set-password");
       }
       //TODO
     } catch (error) {
+      toast.error("An unexpected error occurred during sign-up");
       console.error(error);
-      //TODO
     }
   };
   return (
@@ -75,7 +70,7 @@ const SignUp = () => {
         }}
       >
         <Typography component="h3" variant="h5" sx={{ fontWeight: "700" }}>
-          Sign up
+          Verify code
         </Typography>
         <Box
           component="form"
@@ -87,54 +82,25 @@ const SignUp = () => {
           }}
         >
           <TextInput
-            name="firstName"
+            name="otp"
             register={register}
-            placeholder="First Name"
-            error={errors.firstName}
+            placeholder="Enter code"
+            error={errors.otp}
             type="text"
             variant="outlined"
           />
-          <TextInput
-            name="lastName"
-            register={register}
-            placeholder="Last Name"
-            error={errors.lastName}
-            type="text"
-            variant="outlined"
-          />
-          <TextInput
-            name="email"
-            register={register}
-            placeholder="Email"
-            error={errors.email}
-            type="text"
-            variant="outlined"
-          />
-          <PasswordInput
-            variant="outlined"
-            placeholder="Password"
-            name="password"
-            register={register}
-            error={errors.password}
-          />
-          <PasswordInput
-            variant="outlined"
-            placeholder="Confirm Password"
-            name="rePassword"
-            register={register}
-            error={errors.rePassword}
-          />
-          <Stack direction="row" spacing={1} justifyContent="center">
-            <Typography>Already have an account?</Typography>
 
-            <Link href="/sign-in">
-              <Typography color="primary">Login</Typography>
+          <Stack direction="row" spacing={1} justifyContent="end">
+            <Typography>Didn’t receive a code? </Typography>
+
+            <Link href="/auth/forget-password">
+              <Typography color="primary">Resend</Typography>
             </Link>
           </Stack>
 
           <ButtonInput
             type="submit"
-            text="Create Account"
+            text="Verify"
             variant="contained"
             pending={isSubmitting}
           />
@@ -147,4 +113,4 @@ const SignUp = () => {
   );
 };
 
-export default SignUp;
+export default VerifyCode;

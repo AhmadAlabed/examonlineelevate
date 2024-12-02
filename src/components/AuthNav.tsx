@@ -32,7 +32,7 @@ const AuthNav = () => {
       >
         <Button
           component={Link}
-          href="/sign-up"
+          href="/auth/sign-up"
           variant="outlined"
           color="primary"
           sx={{
@@ -46,7 +46,7 @@ const AuthNav = () => {
         </Button>
         <Button
           component={Link}
-          href="/sign-in"
+          href="/auth/sign-in"
           variant="text"
           color="primary"
           sx={{ fontWeight: "700", textTransform: "none" }}

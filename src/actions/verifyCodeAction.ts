@@ -1,12 +1,12 @@
 "use server";
-import { type TAPIInfo } from "@/types/common";
-export const forgetPasswordAction = async (
+import { type TAPIStatus } from "@/types/common";
+export const verifyCodeAction = async (
   formData: FormData
-): Promise<TAPIInfo> => {
+): Promise<TAPIStatus> => {
   const formDataObj = {
-    email: formData.get("email") as string,
+    resetCode: formData.get("otp") as string,
   };
-  const res = await fetch(`${process.env.API_URL}/auth/forgotPassword`, {
+  const res = await fetch(`${process.env.API_URL}/auth/verifyResetCode`, {
     method: "POST",
     body: JSON.stringify(formDataObj),
     headers: {

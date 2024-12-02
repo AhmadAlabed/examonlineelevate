@@ -5,49 +5,53 @@ import TextInput from "@/components/ui/TextInput";
 import AuthNav from "@/components/AuthNav";
 import AuthButtons from "@/components/AuthButtons";
 //MUI
-import { Box, Divider, Stack, Typography } from "@mui/material";
+import { Box, Divider, Typography } from "@mui/material";
 //Icon
 //
 // Next.js
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter } from "next/navigation";
 // React Hook Form
 import { useForm, SubmitHandler } from "react-hook-form";
 // Validation Schema
-import { verifyCodeResolver } from "@/validations/auth/verifyCodeSchema";
-import { type TVerifyCodeDataType } from "@/types/common";
+import { forgetPasswordResolver } from "@/validations/auth/forgetPasswordSchema";
+import { type TForgetPasswordDataType } from "@/types/common";
+//Next js
+import { forgetPasswordAction } from "@/actions/forgetPasswordAction";
+//React Toastify
 import { toast } from "react-toastify";
-const VerifyCode = () => {
+const ForgetPassword = () => {
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<TVerifyCodeDataType>({
+  } = useForm<TForgetPasswordDataType>({
     defaultValues: {
-      otp: "",
+      email: "",
     },
-    resolver: verifyCodeResolver,
+    resolver: forgetPasswordResolver,
   });
-  const onSubmit: SubmitHandler<TVerifyCodeDataType> = async (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<TForgetPasswordDataType> = async (data) => {
+    // console.log(data);
     try {
-      // const formData = new FormData();
-      // Object.entries(data).forEach(([key, value]) => {
-      //   formData.append(key, value as string);
-      // });
-      // const result = await signUpAction(formData);
-      // // console.log(result);
-      // if (result?.message !== "success") {
-      //   toast.error(result?.message);
-      // } else {
-      //   toast.success("success");
-      //   router.push("/sign-in");
-      // }
-      //TODO
+      const formData = new FormData();
+      Object.entries(data).forEach(([key, value]) => {
+        formData.append(key, value as string);
+      });
+      const result = await forgetPasswordAction(formData);
+      // console.log(result);
+      if (result?.message !== "success") {
+        toast.error(result?.message);
+      } else {
+        toast.success(
+          "Your password reset code was sent successfully, check your email, please."
+        );
+        router.push("/auth/verify-code");
+      }
     } catch (error) {
+      toast.error("An unexpected error occurred during sign-in");
       console.error(error);
-      //TODO
     }
   };
   return (
@@ -67,7 +71,7 @@ const VerifyCode = () => {
         }}
       >
         <Typography component="h3" variant="h5" sx={{ fontWeight: "700" }}>
-          Verify code
+          Forgot your password?
         </Typography>
         <Box
           component="form"
@@ -81,23 +85,26 @@ const VerifyCode = () => {
           <TextInput
             name="email"
             register={register}
-            placeholder="Enter code"
-            error={errors.otp}
+            placeholder="Enter Email"
+            error={errors.email}
             type="text"
             variant="outlined"
           />
-
-          <Stack direction="row" spacing={1} justifyContent="end">
-            <Typography>Didn’t receive a code? </Typography>
-
-            <Link href="/forget-password">
-              <Typography color="primary">Resend</Typography>
-            </Link>
-          </Stack>
+          {/* <Link href="/">
+            <Typography
+              color="primary"
+              sx={{
+                textAlign: "end",
+                fontWeight: "400",
+              }}
+            >
+              Recover Password ?
+            </Typography>
+          </Link> */}
 
           <ButtonInput
             type="submit"
-            text="Verify"
+            text="Send"
             variant="contained"
             pending={isSubmitting}
           />
@@ -110,4 +117,4 @@ const VerifyCode = () => {
   );
 };
 
-export default VerifyCode;
+export default ForgetPassword;

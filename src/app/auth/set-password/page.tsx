@@ -1,7 +1,6 @@
 "use client";
 //Custom Component
 import ButtonInput from "@/components/ui/ButtonInput";
-import TextInput from "@/components/ui/TextInput";
 import AuthNav from "@/components/AuthNav";
 import AuthButtons from "@/components/AuthButtons";
 //MUI
@@ -9,48 +8,51 @@ import { Box, Divider, Typography } from "@mui/material";
 //Icon
 //
 // Next.js
-import Link from "next/link";
+// import Link from "next/link";
 import { useRouter } from "next/navigation";
 // React Hook Form
 import { useForm, SubmitHandler } from "react-hook-form";
 // Validation Schema
-import { forgetPasswordResolver } from "@/validations/auth/forgetPasswordSchema";
-import { type TForgetPasswordDataType } from "@/types/common";
+import { setPasswordResolver } from "@/validations/auth/setPasswordSchema";
+import { type TSetPasswordDataType } from "@/types/common";
 //Next js
-import { forgetPasswordAction } from "@/actions/forgetPasswordAction";
+import { setPasswordAction } from "@/actions/setPasswordAction";
 //React Toastify
 import { toast } from "react-toastify";
-const ForgetPassword = () => {
+import PasswordInput from "@/components/ui/PasswordInput";
+const SetPassword = () => {
   const router = useRouter();
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<TForgetPasswordDataType>({
+  } = useForm<TSetPasswordDataType>({
     defaultValues: {
-      email: "",
+      password: "",
+      rePassword: "",
     },
-    resolver: forgetPasswordResolver,
+    resolver: setPasswordResolver,
   });
-  const onSubmit: SubmitHandler<TForgetPasswordDataType> = async (data) => {
+  const onSubmit: SubmitHandler<TSetPasswordDataType> = async (data) => {
     console.log(data);
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         formData.append(key, value as string);
       });
-      const result = await forgetPasswordAction(formData);
-      // console.log(result);
+      const result = await setPasswordAction(formData);
+      // // console.log(result);
       if (result?.message !== "success") {
         toast.error(result?.message);
       } else {
-        toast.success("Success:OTP sent to your email");
-        router.push("/");
+        toast.success(
+          "Your password was reset successfully, please sign in to continue."
+        );
+        router.push("/auth/sign-in");
       }
-      //TODO
     } catch (error) {
+      toast.error("An unexpected error occurred while setting a new password.");
       console.error(error);
-      //TODO
     }
   };
   return (
@@ -70,7 +72,7 @@ const ForgetPassword = () => {
         }}
       >
         <Typography component="h3" variant="h5" sx={{ fontWeight: "700" }}>
-          Forgot your password?
+          Set a Password?
         </Typography>
         <Box
           component="form"
@@ -81,29 +83,24 @@ const ForgetPassword = () => {
             gap: 1,
           }}
         >
-          <TextInput
-            name="email"
-            register={register}
-            placeholder="Enter Email"
-            error={errors.email}
-            type="text"
+          <PasswordInput
             variant="outlined"
+            placeholder="Password"
+            name="password"
+            register={register}
+            error={errors.password}
           />
-          <Link href="/">
-            <Typography
-              color="primary"
-              sx={{
-                textAlign: "end",
-                fontWeight: "400",
-              }}
-            >
-              Recover Password ?
-            </Typography>
-          </Link>
+          <PasswordInput
+            variant="outlined"
+            placeholder="Confirm Password"
+            name="rePassword"
+            register={register}
+            error={errors.rePassword}
+          />
 
           <ButtonInput
             type="submit"
-            text="Send"
+            text="reset"
             variant="contained"
             pending={isSubmitting}
           />
@@ -116,4 +113,4 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default SetPassword;

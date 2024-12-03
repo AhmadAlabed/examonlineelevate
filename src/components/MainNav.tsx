@@ -1,9 +1,14 @@
 "use client";
 import { useRouter } from "next/navigation";
-import { Stack, Button } from "@mui/material";
-import { signOut } from "next-auth/react";
+import { Button, AppBar, Box, Toolbar, Typography } from "@mui/material";
+import { signOut, useSession } from "next-auth/react";
+import IconButton from "@mui/material/IconButton";
+import MenuIcon from "@mui/icons-material/Menu";
+import RestartAltIcon from "@mui/icons-material/RestartAlt";
+import Link from "next/link";
 
 const MainNav = () => {
+  const { data, status } = useSession();
   const router = useRouter();
   const signOutHandler = async () => {
     await signOut({
@@ -13,26 +18,45 @@ const MainNav = () => {
   };
   return (
     <>
-      <Stack
-        component="nav"
-        direction="row-reverse"
-        spacing={3}
-        paddingInlineEnd="60px"
-      >
-        <Button
-          variant="outlined"
-          color="primary"
-          sx={{
-            border: "1px solid #E0E0E9",
-            boxShadow: "0px 10px 30px 0px #4461F20D",
-            borderRadius: "15px",
-            textTransform: "none",
-          }}
-          onClick={signOutHandler}
-        >
-          SignOut
-        </Button>
-      </Stack>
+      <Box sx={{ flexGrow: 1 }}>
+        <AppBar position="static">
+          <Toolbar>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+              ELEVATE
+            </Typography>
+            {status === "loading" ? (
+              <RestartAltIcon className="animate-spin" />
+            ) : data ? (
+              <>
+                <Button color="inherit" onClick={signOutHandler}>
+                  Sign Out
+                </Button>
+                <Button color="inherit">
+                  <Link href="/profile/dashboard">Profile</Link>
+                </Button>
+              </>
+            ) : (
+              <>
+                <Button color="inherit">
+                  <Link href="/auth/sign-in">Sign In</Link>
+                </Button>
+                <Button color="inherit">
+                  <Link href="/auth/sign-up">register</Link>
+                </Button>
+              </>
+            )}
+          </Toolbar>
+        </AppBar>
+      </Box>
     </>
   );
 };

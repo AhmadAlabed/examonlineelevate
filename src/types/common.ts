@@ -1,13 +1,4 @@
-// export type TState = {
-//   zodError?: { email?: string[]; password?: string[] } | null;
-//   apiError: string | null;
-//   data: {
-//     email: string;
-//     password: string;
-//   };
-//   message: string | null;
-// };
-
+import { User } from "next-auth";
 export type TSigninDataType = {
   email: string;
   password: string;
@@ -29,11 +20,12 @@ export type TVerifyCodeDataType = {
 };
 
 export type TSetPasswordDataType = {
+  email: string;
   password: string;
   rePassword: string;
 };
 
-export type TAPIUserInfo = {
+export interface TAPIUserInfo extends User {
   message: string;
   token: string;
   user: {
@@ -48,7 +40,7 @@ export type TAPIUserInfo = {
     createdAt: string;
     passwordChangedAt: string;
   };
-};
+}
 export type TAPIInfo = {
   message: string;
   info: string;

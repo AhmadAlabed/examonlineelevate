@@ -4,7 +4,7 @@ export const setPasswordAction = async (
   formData: FormData
 ): Promise<TAPIRestStatus> => {
   const formDataObj = {
-    email: "engahmadalabed@gmail.com", //formData.get("email") as string,
+    email: formData.get("email") as string,
     newPassword: formData.get("password") as string,
   };
   const res = await fetch(`${process.env.API_URL}/auth/resetPassword`, {

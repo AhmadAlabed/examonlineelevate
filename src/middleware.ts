@@ -14,7 +14,7 @@ export default async function middleware(request: NextRequest) {
       return NextResponse.redirect(new URL("/", request.url));
     }
   }
-  if (pathname.startsWith("/")) {
+  if (pathname.startsWith("/profile")) {
     if (!token) {
       return NextResponse.redirect(new URL("/auth/sign-in", request.url));
     } else {

@@ -20,28 +20,34 @@ import { setPasswordAction } from "@/actions/setPasswordAction";
 //React Toastify
 import { toast } from "react-toastify";
 import PasswordInput from "@/components/ui/PasswordInput";
+import { useInfo } from "@/context/InfoContext";
+import { useEffect } from "react";
 const SetPassword = () => {
   const router = useRouter();
+  const { info } = useInfo();
+  // console.log(info.email);
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<TSetPasswordDataType>({
     defaultValues: {
+      email: "",
       password: "",
       rePassword: "",
     },
     resolver: setPasswordResolver,
   });
   const onSubmit: SubmitHandler<TSetPasswordDataType> = async (data) => {
-    console.log(data);
+    // console.log(data);
+    data.email = info.email;
+    // console.log(data);
     try {
       const formData = new FormData();
       Object.entries(data).forEach(([key, value]) => {
         formData.append(key, value as string);
       });
       const result = await setPasswordAction(formData);
-      // // console.log(result);
       if (result?.message !== "success") {
         toast.error(result?.message);
       } else {
@@ -55,6 +61,18 @@ const SetPassword = () => {
       console.error(error);
     }
   };
+  useEffect(() => {
+    if (info.email !== "") {
+      toast.warning(
+        "Please do not refresh the page, as doing so will terminate the process."
+      );
+    } else {
+      toast.error(
+        "Your email address was lost during this process. please do not refresh the page, as doing so will terminate the process."
+      );
+      router.push("/auth/forget-password");
+    }
+  }, [info.email, router]);
   return (
     <>
       <AuthNav />

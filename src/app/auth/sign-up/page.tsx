@@ -45,6 +45,7 @@ const SignUp = () => {
         formData.append(key, value as string);
       });
       const result = await signUpAction(formData);
+      // const result = await signUpAction(JSON.stringify(data));
       // console.log(result);
       if (result?.message !== "success") {
         toast.error(result?.message);

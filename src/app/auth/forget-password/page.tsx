@@ -20,8 +20,10 @@ import { type TForgetPasswordDataType } from "@/types/common";
 import { forgetPasswordAction } from "@/actions/forgetPasswordAction";
 //React Toastify
 import { toast } from "react-toastify";
+import { useInfo } from "@/context/InfoContext";
 const ForgetPassword = () => {
   const router = useRouter();
+  const { setInfo } = useInfo();
   const {
     register,
     handleSubmit,
@@ -47,6 +49,8 @@ const ForgetPassword = () => {
         toast.success(
           "Your password reset code was sent successfully, check your email, please."
         );
+        setInfo({ email: data.email });
+        //TODO
         router.push("/auth/verify-code");
       }
     } catch (error) {

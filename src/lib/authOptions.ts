@@ -1,6 +1,6 @@
-import { AuthOptions } from "next-auth";
+import { AuthOptions, User } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { apiUserInfo } from "../types/common";
+import { TAPIUserInfo } from "../types/common";
 import { JWT } from "next-auth/jwt";
 // import GoogleProvider from "next-auth/providers/google";
 // import GitHubProvider from "next-auth/providers/github";
@@ -53,21 +53,29 @@ export const authOptions: AuthOptions = {
     }),
   ],
   callbacks: {
-    //   async signIn({ account, profile }) {
-    //     if (account?.provider === "github") {
-    //       await connectToDatabase();
-    //       const existingUser = await User.findOne({ email: profile?.email });
-    //       if (!existingUser) {
-    //         await User.create({ email: profile?.email, name: profile?.name });
-    //       }
-    //     }
-    //     return true;
-    //   },
-    async jwt({ token, user }) {
-      if (user) {
-        token.id = user?.user?._id;
-        token.email = user?.user?.email;
+    async signIn({ account, profile }) {
+      if (account?.provider === "github") {
+        await connectToDatabase();
+        const existingUser = await User.findOne({ email: profile?.email });
+        if (!existingUser) {
+          await User.create({ email: profile?.email, name: profile?.name });
+        }
       }
+      return true;
+    },
+    async jwt({
+      token,
+      user,
+    }: {
+      token: JWT;
+      user?: TAPIUserInfo | User;
+    }): Promise<JWT> {
+      if (user) {
+        const customUser = user as TAPIUserInfo;
+        token.id = customUser?.user?._id;
+        token.email = customUser?.user?.email;
+      }
+      console.log(user);
       return token;
     },
     // async session({ session, token }) {
